@@ -1,0 +1,7 @@
+{
+  "user": {
+    "name": "Ada",
+    "roles": ["admin", "editor"]
+  },
+  "enabled": true
+}
