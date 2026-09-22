@@ -1,10 +1,14 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 const projectRoot = fileURLToPath(new URL("../", import.meta.url));
 const cliPath = fileURLToPath(new URL("../src/cli.ts", import.meta.url));
+const { version } = JSON.parse(
+  readFileSync(new URL("../package.json", import.meta.url), "utf-8"),
+) as { version: string };
 const fixturePath = fileURLToPath(
   new URL("./fixtures/data.json", import.meta.url),
 );
@@ -17,6 +21,24 @@ function runCli(args: string[], input?: string) {
     timeout: 10_000,
   });
 }
+
+test("prints help", () => {
+  const result = runCli(["--help"]);
+
+  assert.equal(result.error, undefined);
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /^Usage: jsonpick \[file\|url\] path/);
+  assert.equal(result.stderr, "");
+});
+
+test("prints the package version", () => {
+  const result = runCli(["--version"]);
+
+  assert.equal(result.error, undefined);
+  assert.equal(result.status, 0);
+  assert.equal(result.stdout, `${version}\n`);
+  assert.equal(result.stderr, "");
+});
 
 test("prints a nested value from a JSON file", () => {
   const result = runCli([fixturePath, "user.name"]);
