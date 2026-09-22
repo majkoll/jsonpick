@@ -37,3 +37,15 @@ jsonpick ./package.json engines
 jsonpick data.json user.name
 jsonpick data.json members.1.name
 ```
+
+## Shell scripting
+
+String, number, and boolean values are printed without JSON quotes, so they can be captured directly in shell variables:
+
+```sh
+VERSION=$(jsonpick package.json version)
+echo "$VERSION"
+# 0.0.0
+```
+
+Objects and arrays are printed as formatted JSON.
