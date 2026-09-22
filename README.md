@@ -1,6 +1,6 @@
 # jsonpick
 
-`jsonpick` is a command-line tool for reading a value from a JSON file or URL using a dot-separated path.
+`jsonpick` is a command-line tool for reading a value from a JSON file or URL using a dot-separated path, including numeric array indexes.
 
 ```sh
 jsonpick data.json user.name
@@ -35,4 +35,5 @@ For example:
 ```sh
 jsonpick ./package.json engines
 jsonpick data.json user.name
+jsonpick data.json members.1.name
 ```

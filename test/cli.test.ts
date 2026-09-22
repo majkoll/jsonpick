@@ -27,6 +27,15 @@ test("prints a nested value from a JSON file", () => {
   assert.equal(result.stderr, "");
 });
 
+test("prints a value selected with an array index", () => {
+  const result = runCli([fixturePath, "members.1.name"]);
+
+  assert.equal(result.error, undefined);
+  assert.equal(result.status, 0);
+  assert.equal(result.stdout, "Bar\n");
+  assert.equal(result.stderr, "");
+});
+
 test("prints object values as formatted JSON", () => {
   const result = runCli([fixturePath, "user.roles"]);
 
