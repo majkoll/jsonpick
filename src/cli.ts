@@ -5,7 +5,9 @@ import { loadJson } from "./loadJson.ts";
 import { getValue } from "./getValue.ts";
 
 const require = createRequire(import.meta.url);
-const { version } = require("jsonpick/package.json") as { version: string };
+const { version } = require("@majkoll/jsonpick/package.json") as {
+  version: string;
+};
 
 const HELP = `Usage: jsonpick [file|url] path
 
