@@ -33,7 +33,10 @@ test("prints help", () => {
 
   assert.equal(result.error, undefined);
   assert.equal(result.status, 0);
-  assert.match(result.stdout, /^Usage: jsonpick \[file\|url\|-\] path/);
+  assert.match(
+    result.stdout,
+    /^Usage: jsonpick \[--compact\|-c\] \[file\|url\|-\] path/,
+  );
   assert.equal(result.stderr, "");
 });
 
@@ -131,5 +134,8 @@ test("reports usage when called with no arguments", () => {
   assert.equal(result.error, undefined);
   assert.equal(result.status, 1);
   assert.equal(result.stdout, "");
-  assert.equal(result.stderr, "Usage: jsonpick [file|url|-] path\n");
+  assert.equal(
+    result.stderr,
+    "Usage: jsonpick [--compact|-c] [file|url|-] path\n",
+  );
 });
