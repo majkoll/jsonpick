@@ -9,7 +9,7 @@ const { version } = require("@majkoll/jsonpick/package.json") as {
   version: string;
 };
 
-const HELP = `Usage: jsonpick [file|url|-] path
+const HELP = `Usage: jsonpick [--compact|-c] [file|url|-] path
 
 Read a value from JSON using a dot-separated path.
 
@@ -20,12 +20,14 @@ Arguments:
 Options:
   -h, --help     Show this help message.
   -v, --version  Show the jsonpick version.
+  -c, --compact  Print arrays and objects as compact JSON.
 
 Examples:
   jsonpick package.json version
   jsonpick data.json user.name
   jsonpick data.json members.0.name
   cat data.json | jsonpick user.name
+  jsonpick --compact data.json user.roles
 `;
 
 async function main() {
@@ -41,17 +43,25 @@ async function main() {
     return;
   }
 
+  if (args.length === 1 && ["-c", "--compact"].includes(args[0])) {
+    console.log(HELP);
+    return;
+  }
+
+  const compact = args.includes("-c") || args.includes("--compact");
+  const positionalArgs = args.filter(
+    (arg) => arg !== "-c" && arg !== "--compact",
+  );
   let source: string | undefined;
   let path: string;
 
-  if (args.length === 1) {
-    path = args[0];
-  } else if (args.length === 2) {
-    source = args[0] === "-" ? undefined : args[0];
-    path = args[1];
+  if (positionalArgs.length === 1) {
+    path = positionalArgs[0];
+  } else if (positionalArgs.length === 2) {
+    source = positionalArgs[0] === "-" ? undefined : positionalArgs[0];
+    path = positionalArgs[1];
   } else {
-    console.error(`Usage: jsonpick [file|url|-] path`);
-
+    console.error(`Usage: jsonpick [--compact|-c] [file|url|-] path`);
     process.exit(1);
     return;
   }
@@ -67,7 +77,9 @@ async function main() {
   }
 
   if (typeof value === "object") {
-    console.log(JSON.stringify(value, null, 2));
+    console.log(
+      compact ? JSON.stringify(value) : JSON.stringify(value, null, 2),
+    );
   } else {
     console.log(value);
   }

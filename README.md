@@ -28,7 +28,7 @@ npm link
 ## Usage
 
 ```sh
-jsonpick [file|url|-] path
+jsonpick [--compact|-c] [file|url|-] path
 ```
 
 ```sh
@@ -37,12 +37,14 @@ jsonpick data.json user.name
 jsonpick data.json members.1.name
 curl -s https://jsonplaceholder.typicode.com/users/1 | jsonpick name
 curl -s https://jsonplaceholder.typicode.com/users/1 | jsonpick - name
+jsonpick --compact data.json user.roles
 ```
 
 Run `jsonpick --help` for the full command reference and `jsonpick --version` to print the installed version.
 
 ## Shell scripting
 
+Use `--compact` or (`-c`) to print selected objects and arrays as sinle-line JSON
 Use `-` as the source to explicitly read JSON from standard input; omitting the source also reads from standard input.
 
 String, number, and boolean values are printed without JSON quotes, so they can be captured directly in shell variables:
