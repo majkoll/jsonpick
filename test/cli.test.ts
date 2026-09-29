@@ -12,6 +12,12 @@ const { version } = JSON.parse(
 const fixturePath = fileURLToPath(
   new URL("./fixtures/data.json", import.meta.url),
 );
+const invalidFixturePath = fileURLToPath(
+  new URL("./fixtures/invalid.json", import.meta.url),
+);
+const missingFixturePath = fileURLToPath(
+  new URL("./fixtures/missing.json", import.meta.url),
+);
 
 function runCli(args: string[], input?: string) {
   return spawnSync(process.execPath, ["--import", "tsx", cliPath, ...args], {
@@ -74,16 +80,31 @@ test("reads JSON from standard input when no source is supplied", () => {
   assert.equal(result.stdout, "Grace\n");
 });
 
-test("prints a value from a JSON URL", () => {
-  const result = runCli([
-    "https://jsonplaceholder.typicode.com/users/1",
-    "name",
-  ]);
+test("reports a missing JSON file", () => {
+  const result = runCli([missingFixturePath, "user.name"]);
 
   assert.equal(result.error, undefined);
-  assert.equal(result.status, 0);
-  assert.equal(result.stdout, "Leanne Graham\n");
-  assert.equal(result.stderr, "");
+  assert.equal(result.status, 1);
+  assert.equal(result.stdout, "");
+  assert.match(result.stderr, /^Could not read file .+missing\.json:/);
+});
+
+test("reports invalid JSON in a file", () => {
+  const result = runCli([invalidFixturePath, "user.name"]);
+
+  assert.equal(result.error, undefined);
+  assert.equal(result.status, 1);
+  assert.equal(result.stdout, "");
+  assert.match(result.stderr, /^Could not parse JSON from .+invalid\.json:/);
+});
+
+test("reports invalid JSON from standard input", () => {
+  const result = runCli(["user.name"], "{not valid JSON}");
+
+  assert.equal(result.error, undefined);
+  assert.equal(result.status, 1);
+  assert.equal(result.stdout, "");
+  assert.match(result.stderr, /^Could not parse JSON from standard input:/);
 });
 
 test("reports a missing path", () => {

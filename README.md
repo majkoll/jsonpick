@@ -1,9 +1,10 @@
 # jsonpick
 
-`jsonpick` is a command-line tool for reading a value from a JSON file or URL using a dot-separated path, including numeric array indexes.
+`jsonpick` is a command-line tool for reading a value from a JSON file, URL, or standard input using a dot-separated path. Numeric path segments select array items.
 
 ```sh
 jsonpick data.json user.name
+jsonpick data.json members.1.name
 ```
 
 ## Install
@@ -11,8 +12,10 @@ jsonpick data.json user.name
 Install globally from npm:
 
 ```sh
-npm install --global jsonpick
+npm install --global @majkoll/jsonpick
 ```
+
+The package is scoped, but the installed command is still `jsonpick`.
 
 To install a local checkout instead:
 
@@ -22,21 +25,20 @@ npm run build
 npm link
 ```
 
-After installation, the `jsonpick` command is available globally.
-
 ## Usage
 
 ```sh
 jsonpick [file|url] path
 ```
 
-For example:
-
 ```sh
 jsonpick ./package.json engines
 jsonpick data.json user.name
 jsonpick data.json members.1.name
+curl -s https://jsonplaceholder.typicode.com/users/1 | jsonpick name
 ```
+
+Run `jsonpick --help` for the full command reference and `jsonpick --version` to print the installed version.
 
 ## Shell scripting
 
@@ -45,7 +47,20 @@ String, number, and boolean values are printed without JSON quotes, so they can 
 ```sh
 VERSION=$(jsonpick package.json version)
 echo "$VERSION"
-# 0.0.0
 ```
 
 Objects and arrays are printed as formatted JSON.
+
+## Testing
+
+Run the local test suite:
+
+```sh
+npm test
+```
+
+Run the external integration test separately. It requires internet access and calls JSONPlaceholder:
+
+```sh
+npm run test:integration
+```

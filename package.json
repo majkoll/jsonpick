@@ -18,7 +18,8 @@
     "postbuild": "node -e \"require('node:fs').chmodSync('dist/src/cli.js', 0o755)\"",
     "check": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json",
     "start": "tsx src/cli.ts",
-    "test": "tsx --test test/*.test.ts"
+    "test": "tsx --test test/*.test.ts",
+    "test:integration": "tsx --test test/integration/*.test.ts"
   },
   "keywords": [
     "json",
