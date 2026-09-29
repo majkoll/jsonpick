@@ -9,12 +9,12 @@ const { version } = require("@majkoll/jsonpick/package.json") as {
   version: string;
 };
 
-const HELP = `Usage: jsonpick [file|url] path
+const HELP = `Usage: jsonpick [file|url|-] path
 
 Read a value from JSON using a dot-separated path.
 
 Arguments:
-  file|url    A local JSON file or HTTP(S) URL. Omit it to read JSON from stdin.
+  file|url|-  A local JSON file, HTTP(S) URL, or - for standard input.
   path        A dot-separated path, such as user.name or members.0.name.
 
 Options:
@@ -47,10 +47,10 @@ async function main() {
   if (args.length === 1) {
     path = args[0];
   } else if (args.length === 2) {
-    source = args[0];
+    source = args[0] === "-" ? undefined : args[0];
     path = args[1];
   } else {
-    console.error(`Usage: jsonpick [file|url] path`);
+    console.error(`Usage: jsonpick [file|url|-] path`);
 
     process.exit(1);
     return;

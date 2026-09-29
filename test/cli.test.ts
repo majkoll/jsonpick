@@ -33,7 +33,7 @@ test("prints help", () => {
 
   assert.equal(result.error, undefined);
   assert.equal(result.status, 0);
-  assert.match(result.stdout, /^Usage: jsonpick \[file\|url\] path/);
+  assert.match(result.stdout, /^Usage: jsonpick \[file\|url\|-\] path/);
   assert.equal(result.stderr, "");
 });
 
@@ -80,6 +80,15 @@ test("reads JSON from standard input when no source is supplied", () => {
   assert.equal(result.stdout, "Grace\n");
 });
 
+test("reads JSON from standard input when - is supplied as the source", () => {
+  const result = runCli(["-", "user.name"], '{"user":{"name":"Grace"}}');
+
+  assert.equal(result.error, undefined);
+  assert.equal(result.status, 0);
+  assert.equal(result.stdout, "Grace\n");
+  assert.equal(result.stderr, "");
+});
+
 test("reports a missing JSON file", () => {
   const result = runCli([missingFixturePath, "user.name"]);
 
@@ -122,5 +131,5 @@ test("reports usage when called with no arguments", () => {
   assert.equal(result.error, undefined);
   assert.equal(result.status, 1);
   assert.equal(result.stdout, "");
-  assert.equal(result.stderr, "Usage: jsonpick [file|url] path\n");
+  assert.equal(result.stderr, "Usage: jsonpick [file|url|-] path\n");
 });
